@@ -3,12 +3,10 @@
 
 #include "DemoVoiceExperience.h"
 
+#include "WitIntentFunctionComponent.h"
 #include "Voice/Platform/PlatformVoiceService.h"
 #include "Wit/Voice/WitVoiceService.h"
 
-/**
- * Sets default values for this actor's properties
- */
 ADemoVoiceExperience::ADemoVoiceExperience()
 	: Super()
 {
@@ -20,19 +18,40 @@ ADemoVoiceExperience::ADemoVoiceExperience()
 
 void ADemoVoiceExperience::OnTranscriptionFinished(const FString& Transcription)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Transcription);
+	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Transcription);
 }
 
 void ADemoVoiceExperience::OnWitResponse(const bool bIsSuccessful, const FWitResponse& Response)
 {
-	FString DebugMessage;
+	if (!bIsSuccessful)
+		return;
 
-	TArray<FWitIntent> Intents = Response.Intents;
-	
+	const TArray<FWitIntent>& Intents = Response.Intents;
+
+	if (Intents.Num() == 0)
+		return;
+
+	for (UWitIntentFunctionComponent* IntentFunction : IntentFunctions)
+	{
+		if (IntentFunction->TryExecute(Response))
+			break;
+	}
+
+	FString DebugMessage = Response.Intents[0].Name + "(";
+
+	bool bIsFirst = true;
+
 	for (TTuple<FString, FWitEntity> Tuple : Response.Entities)
 	{
-		DebugMessage.Append(Tuple.Value.Role + ", " + Tuple.Value.Value + "\n");	
+		if (!bIsFirst)
+			DebugMessage.Append(", ");
+		else
+			bIsFirst = false;
+
+		DebugMessage.Append(Tuple.Value.Value + ":" + Tuple.Value.Role);
 	}
+
+	DebugMessage.Append(")");
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, DebugMessage);
 }
@@ -53,6 +72,8 @@ void ADemoVoiceExperience::BeginPlay()
 	{
 		VoiceService = WitVoiceService;
 	}
+
+	GetComponents<UWitIntentFunctionComponent>(IntentFunctions);
 
 	Super::BeginPlay();
 	VoiceEvents->OnFullTranscription.AddDynamic(this, &ADemoVoiceExperience::OnTranscriptionFinished);
@@ -83,4 +104,18 @@ bool ADemoVoiceExperience::TryDeactivateVoiceInput()
 		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Voice Input Deactivated!"));
 
 	return bResult;
+}
+
+bool ADemoVoiceExperience::IsValidColor(const FString& ColorName) const
+{
+	return ColorMap.Contains(ColorName);
+}
+
+FColor ADemoVoiceExperience::GetColorByName(const FString& ColorName) const
+{
+	if (!ColorMap.Contains(ColorName))
+		return FColor::White;
+
+	const FString ColorHex = ColorMap[ColorName];
+	return FColor::FromHex(ColorHex);
 }
