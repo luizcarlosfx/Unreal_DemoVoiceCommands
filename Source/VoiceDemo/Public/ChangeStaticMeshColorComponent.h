@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(VoiceCommands), meta=(BlueprintSpawnableComponent))
 class VOICEDEMO_API UChangeStaticMeshColorComponent : public UChangeColorComponent
 {
 	GENERATED_BODY()

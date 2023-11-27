@@ -16,7 +16,6 @@ protected:
 	UChangeColorComponent();
 	virtual void BeginPlay() override;
 	virtual FColor GetCurrentColor() const;
-	virtual FString GetObjectName() const;
 	virtual bool Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map) override;
 	virtual void SetColor(const FColor& Color);
 	virtual void SetOpacity(const float& Value);

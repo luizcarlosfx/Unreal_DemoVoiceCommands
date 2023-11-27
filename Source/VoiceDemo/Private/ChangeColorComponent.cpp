@@ -23,11 +23,6 @@ FColor UChangeColorComponent::GetCurrentColor() const
 	return FColor::Red;
 }
 
-FString UChangeColorComponent::GetObjectName() const
-{
-	return FString();
-}
-
 bool UChangeColorComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
 	if (!Map.Contains(ObjectEntity))

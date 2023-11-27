@@ -22,7 +22,7 @@ FColor UChangeStaticMeshColorComponent::GetCurrentColor() const
 {
 	FLinearColor Color;
 	Material->GetVectorParameterValue(PropertyName, Color);
-	return Color.ToFColor(false);
+	return Color.ToFColor(true);
 }
 
 void UChangeStaticMeshColorComponent::SetOpacity(const float& Value)
