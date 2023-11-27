@@ -16,9 +16,6 @@ bool UChangeLightIntensityComponent::Validate(const FString& Intent, const TMap<
 	if (!Super::Validate(Intent, Map))
 		return false;
 
-	for (TTuple<FString, FWitEntity> Tuple : Map)
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, Tuple.Key);
-
 	if (!Intent.Equals(ChangeIntensityIntent))
 		return false;
 

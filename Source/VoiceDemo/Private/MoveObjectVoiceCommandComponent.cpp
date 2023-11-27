@@ -23,11 +23,10 @@ bool UMoveObjectVoiceCommandComponent::Validate(const FString& Intent, const TMa
 
 void UMoveObjectVoiceCommandComponent::Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
-	const FString& Direction = Map[DirectionEntity].Value;
-	const FVector& DirectionVector = Manager->GetDirectionByName(Direction);
+	const FString& DirectionName = Map[DirectionEntity].Value;
+	const FVector& DirectionVector = Manager->GetDirectionByName(DirectionName);
 
-	const AActor* Owner = GetOwner();
-	const FVector& Start = Owner->GetActorLocation();
+	const FVector& Start = GetOwner()->GetActorLocation();
 	const FVector End = Start + DirectionVector * TargetMovementLength;
 
 	FCTween::Play(Start, End, [&](const FVector& Location) { MoveOwnerToLocation(Location); }, 0.75f, EFCEase::OutCubic);
