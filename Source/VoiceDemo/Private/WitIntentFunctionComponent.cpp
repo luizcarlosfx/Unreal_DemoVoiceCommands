@@ -5,7 +5,7 @@
 
 #include "DemoVoiceExperience.h"
 
-bool UWitIntentFunctionComponent::ValidateEntities(const FString& Intent, const TMap<FString, FWitEntity>& Map)
+bool UWitIntentFunctionComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
 	return true;
 }
@@ -14,11 +14,6 @@ void UWitIntentFunctionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Experience = Cast<ADemoVoiceExperience>(GetOwner());
-}
-
-bool UWitIntentFunctionComponent::ValidateIntent(const FString& Name)
-{
-	return false;
 }
 
 bool UWitIntentFunctionComponent::TryExecute(const FWitResponse& Response)
@@ -31,20 +26,18 @@ bool UWitIntentFunctionComponent::TryExecute(const FWitResponse& Response)
 	const FWitIntent& Intent = Intents[0];
 	const FString& IntentName = Intent.Name;
 	
-	if (Intent.Confidence < ConfidenceLevel || !ValidateIntent(IntentName))
+	if (Intent.Confidence < ConfidenceLevel)
 		return false;
-
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Intent Validated"));
 
 	const TMap<FString, FWitEntity>& Entities = Response.Entities;
 
-	// for (const TTuple<FString, FWitEntity>& Tuple : Entities)
-	// {
-	// 	if (Tuple.Value.Confidence < ConfidenceLevel)
-	// 		return false;
-	// }
+	for (const TTuple<FString, FWitEntity>& Tuple : Entities)
+	{
+		if (Tuple.Value.Confidence < ConfidenceLevel)
+			return false;
+	}
 
-	if (ValidateEntities(IntentName, Entities))
+	if (Validate(IntentName, Entities))
 	{
 		Execute(IntentName, Entities);
 		return true;

@@ -13,6 +13,7 @@ void UChangeStaticMeshColorComponent::BeginPlay()
 	Material = UMaterialInstanceDynamic::Create(Interface, nullptr);
 	MeshComponent->SetMaterial(MaterialIndex, Material);
 	Super::BeginPlay();
+	// SetColor(FColor::Red);
 }
 
 FString UChangeStaticMeshColorComponent::GetObjectName() const

@@ -17,8 +17,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual FColor GetCurrentColor() const;
 	virtual FString GetObjectName() const;
-	virtual bool ValidateEntities(const FString& Intent, const TMap<FString, FWitEntity>& Map) override;
-	virtual bool ValidateIntent(const FString& Name) override;
+	virtual bool Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map) override;
 	virtual void SetColor(const FColor& Color);
 	virtual void SetOpacity(const float& Value);
 	void ChangeColor(const FString& ColorName);
@@ -26,6 +25,9 @@ protected:
 	void ChangeOpacity(const FString& PercentageText);
 	virtual void Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map) override;
 
+	UPROPERTY(EditAnywhere)
+	FString TargetObjectName;
+	
 	UPROPERTY(EditAnywhere)
 	FString ChangeColorIntent = "change_object_color";
 

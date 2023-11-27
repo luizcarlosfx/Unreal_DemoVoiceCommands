@@ -26,26 +26,29 @@ FString UChangeColorComponent::GetObjectName() const
 	return FString();
 }
 
-bool UChangeColorComponent::ValidateEntities(const FString& Intent, const TMap<FString, FWitEntity>& Map)
+bool UChangeColorComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
 	if (!Map.Contains(ObjectEntity))
 		return false;
 
 	const FString ObjName = Map[ObjectEntity].Value;
 
-	if (!ObjName.Equals(GetObjectName(), ESearchCase::IgnoreCase))
+	if (!ObjName.Equals(TargetObjectName, ESearchCase::IgnoreCase))
 		return false;
 
-	if (Intent == ChangeColorIntent && !Map.Contains(ColorEntity))
-		return false;
+	if (Intent == ChangeColorIntent)
+	{
+		if (!Map.Contains(ColorEntity))
+			return false;
 
-	const FString ColorName = Map[ColorEntity].Value;
-	return Experience->IsValidColor(ColorName);
-}
+		const FString ColorName = Map[ColorEntity].Value;
+		return Experience->IsValidColor(ColorName);
+	}
 
-bool UChangeColorComponent::ValidateIntent(const FString& Name)
-{
-	return Name == ChangeColorIntent || Name == ChangeOpacityIntent || Name == ResetColorIntent;
+	if (Intent == ChangeOpacityIntent)
+		return Map.Contains(OpacityEntity);
+
+	return Intent == ResetColorIntent;
 }
 
 void UChangeColorComponent::SetColor(const FColor& Color)
@@ -63,7 +66,6 @@ void UChangeColorComponent::ChangeColor(const FString& ColorName)
 
 void UChangeColorComponent::Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, "Executing...");
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, Intent);
 	if (Intent.Equals(ChangeColorIntent))
 		ChangeColor(Map[ColorEntity].Value);
@@ -75,7 +77,6 @@ void UChangeColorComponent::Execute(const FString& Intent, const TMap<FString, F
 
 void UChangeColorComponent::ResetColor()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("reset color"));
 	SetColor(DefaultColor);
 }
 

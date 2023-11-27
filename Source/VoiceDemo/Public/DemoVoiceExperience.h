@@ -14,7 +14,6 @@ class VOICEDEMO_API ADemoVoiceExperience : public AVoiceExperience
 
 public:
 	ADemoVoiceExperience();
-
 	/**
 	 * The wit voice service
 	 */

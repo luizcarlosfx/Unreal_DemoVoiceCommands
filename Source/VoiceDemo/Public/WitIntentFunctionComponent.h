@@ -19,11 +19,10 @@ protected:
 
 	UPROPERTY()
 	class ADemoVoiceExperience* Experience;
-	virtual bool ValidateEntities(const FString& Intent, const TMap<FString, FWitEntity>& Map);
+	virtual bool Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map);
 
 public:
 	virtual void BeginPlay() override;
-	virtual bool ValidateIntent(const FString& Name);
 	bool TryExecute(const FWitResponse& Response);
 
 private:
