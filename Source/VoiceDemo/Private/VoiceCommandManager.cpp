@@ -122,9 +122,22 @@ bool AVoiceCommandManager::IsValidColor(const FString& ColorName) const
 
 FColor AVoiceCommandManager::GetColorByName(const FString& ColorName) const
 {
-	if (!ColorMap.Contains(ColorName))
+	if (!IsValidColor(ColorName))
 		return FColor::White;
 
 	const FString ColorHex = ColorMap[ColorName];
 	return FColor::FromHex(ColorHex);
+}
+
+bool AVoiceCommandManager::IsValidDirection(const FString& DirectionName) const
+{
+	return DirectionsMap.Contains(DirectionName);
+}
+
+FVector AVoiceCommandManager::GetDirectionByName(const FString& DirectionName) const
+{
+	if (!IsValidDirection(DirectionName))
+		return FVector::Zero();
+
+	return DirectionsMap[DirectionName];
 }

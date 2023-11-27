@@ -44,6 +44,9 @@ public:
 	bool IsValidColor(const FString& ColorName) const;
 	FColor GetColorByName(const FString& ColorName) const;
 
+	bool IsValidDirection(const FString& DirectionName) const;
+	FVector GetDirectionByName(const FString& DirectionName) const;
+
 protected:
 	UFUNCTION()
 	void OnWitResponse(const bool bIsSuccessful, const FWitResponse& Response);
