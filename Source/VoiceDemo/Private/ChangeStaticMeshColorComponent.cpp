@@ -3,22 +3,13 @@
 
 #include "ChangeStaticMeshColorComponent.h"
 
-#include "Engine/StaticMeshActor.h"
-
-
 void UChangeStaticMeshColorComponent::BeginPlay()
 {
-	UStaticMeshComponent* MeshComponent = MeshActor->GetStaticMeshComponent();
+	UStaticMeshComponent* MeshComponent = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* Interface = MeshComponent->GetMaterial(MaterialIndex);
 	Material = UMaterialInstanceDynamic::Create(Interface, nullptr);
 	MeshComponent->SetMaterial(MaterialIndex, Material);
 	Super::BeginPlay();
-	// SetColor(FColor::Red);
-}
-
-FString UChangeStaticMeshColorComponent::GetObjectName() const
-{
-	return MeshActor->GetName();
 }
 
 void UChangeStaticMeshColorComponent::SetColor(const FColor& Color)

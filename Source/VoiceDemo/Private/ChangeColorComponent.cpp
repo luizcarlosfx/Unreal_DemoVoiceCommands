@@ -1,11 +1,13 @@
 #include "ChangeColorComponent.h"
 
-#include "DemoVoiceExperience.h"
-#include "Chaos/SpatialAccelerationCollection.h"
+#include "..\Public\VoiceCommandManager.h"
 
 UChangeColorComponent::UChangeColorComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	if (const AActor* Owner = GetOwner())
+		TargetObjectName = Owner->GetActorLabel();;
 }
 
 
@@ -42,7 +44,7 @@ bool UChangeColorComponent::Validate(const FString& Intent, const TMap<FString, 
 			return false;
 
 		const FString ColorName = Map[ColorEntity].Value;
-		return Experience->IsValidColor(ColorName);
+		return Manager->IsValidColor(ColorName);
 	}
 
 	if (Intent == ChangeOpacityIntent)
@@ -61,12 +63,11 @@ void UChangeColorComponent::SetOpacity(const float& Value)
 
 void UChangeColorComponent::ChangeColor(const FString& ColorName)
 {
-	SetColor(Experience->GetColorByName(ColorName));
+	SetColor(Manager->GetColorByName(ColorName));
 }
 
 void UChangeColorComponent::Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, Intent);
 	if (Intent.Equals(ChangeColorIntent))
 		ChangeColor(Map[ColorEntity].Value);
 	else if (Intent.Equals(ResetColorIntent))

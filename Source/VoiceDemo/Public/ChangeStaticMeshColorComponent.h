@@ -17,14 +17,10 @@ class VOICEDEMO_API UChangeStaticMeshColorComponent : public UChangeColorCompone
 public:
 	virtual void BeginPlay() override;
 protected:
-	virtual FString GetObjectName() const override;
 	virtual void SetColor(const FColor& Color) override;
 	virtual FColor GetCurrentColor() const override;
 	virtual void SetOpacity(const float& Value) override;
 private:
-	UPROPERTY(EditInstanceOnly)
-	class AStaticMeshActor* MeshActor;
-
 	UPROPERTY(EditInstanceOnly)
 	int MaterialIndex = 0;
 

@@ -3,7 +3,7 @@
 
 #include "WitIntentFunctionComponent.h"
 
-#include "DemoVoiceExperience.h"
+#include "..\Public\VoiceCommandManager.h"
 
 bool UWitIntentFunctionComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
@@ -13,7 +13,8 @@ bool UWitIntentFunctionComponent::Validate(const FString& Intent, const TMap<FSt
 void UWitIntentFunctionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Experience = Cast<ADemoVoiceExperience>(GetOwner());
+	Manager = AVoiceCommandManager::GetInstance();
+	Manager->RegisterFunction(this);
 }
 
 bool UWitIntentFunctionComponent::TryExecute(const FWitResponse& Response)

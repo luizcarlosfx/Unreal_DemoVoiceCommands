@@ -18,7 +18,7 @@ protected:
 	float ConfidenceLevel = 0.5f;
 
 	UPROPERTY()
-	class ADemoVoiceExperience* Experience;
+	class AVoiceCommandManager* Manager;
 	virtual bool Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map);
 
 public:

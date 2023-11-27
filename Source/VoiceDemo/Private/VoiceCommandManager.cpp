@@ -1,27 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DemoVoiceExperience.h"
+#include "..\Public\VoiceCommandManager.h"
 
 #include "WitIntentFunctionComponent.h"
 #include "Voice/Platform/PlatformVoiceService.h"
 #include "Wit/Voice/WitVoiceService.h"
 
-ADemoVoiceExperience::ADemoVoiceExperience()
+AVoiceCommandManager::AVoiceCommandManager()
 	: Super()
 {
 	WitVoiceService = CreateDefaultSubobject<UWitVoiceService>(TEXT("WitVoiceService"));
 	PlatformVoiceService = CreateDefaultSubobject<UPlatformVoiceService>(TEXT("PlatformVoiceService"));
 
 	VoiceService = WitVoiceService;
+	Instance = this;
 }
 
-void ADemoVoiceExperience::OnTranscriptionFinished(const FString& Transcription)
-{
-	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, Transcription);
-}
-
-void ADemoVoiceExperience::OnWitResponse(const bool bIsSuccessful, const FWitResponse& Response)
+void AVoiceCommandManager::OnWitResponse(const bool bIsSuccessful, const FWitResponse& Response)
 {
 	if (!bIsSuccessful)
 		return;
@@ -59,7 +55,7 @@ void ADemoVoiceExperience::OnWitResponse(const bool bIsSuccessful, const FWitRes
 /**
  * Called when play starts. Decides which voice service to use
  */
-void ADemoVoiceExperience::BeginPlay()
+void AVoiceCommandManager::BeginPlay()
 {
 	const bool bShouldUsePlatformIntegration = Configuration != nullptr && Configuration->Application.Advanced.bIsPlatformIntegrationEnabled;
 	UE_LOG(LogTemp, Display, TEXT("Init VoiceService: bIsPlatformIntegrationEnabled=%s"), bShouldUsePlatformIntegration ? TEXT("true") : TEXT("false"));
@@ -73,14 +69,22 @@ void ADemoVoiceExperience::BeginPlay()
 		VoiceService = WitVoiceService;
 	}
 
-	GetComponents<UWitIntentFunctionComponent>(IntentFunctions);
-
 	Super::BeginPlay();
-	VoiceEvents->OnFullTranscription.AddDynamic(this, &ADemoVoiceExperience::OnTranscriptionFinished);
-	VoiceEvents->OnWitResponse.AddDynamic(this, &ADemoVoiceExperience::OnWitResponse);
+	VoiceEvents->OnWitResponse.AddDynamic(this, &AVoiceCommandManager::OnWitResponse);
 }
 
-bool ADemoVoiceExperience::TryActivateVoiceInput()
+void AVoiceCommandManager::Destroyed()
+{
+	Super::Destroyed();
+	Instance = nullptr;
+}
+
+AVoiceCommandManager* AVoiceCommandManager::GetInstance()
+{
+	return Instance;
+}
+
+bool AVoiceCommandManager::TryActivateVoiceInput()
 {
 	if (IsVoiceInputActive() || IsRequestInProgress())
 		return false;
@@ -93,7 +97,7 @@ bool ADemoVoiceExperience::TryActivateVoiceInput()
 	return bResult;
 }
 
-bool ADemoVoiceExperience::TryDeactivateVoiceInput()
+bool AVoiceCommandManager::TryDeactivateVoiceInput()
 {
 	if (IsRequestInProgress() || !IsVoiceInputActive())
 		return false;
@@ -106,12 +110,17 @@ bool ADemoVoiceExperience::TryDeactivateVoiceInput()
 	return bResult;
 }
 
-bool ADemoVoiceExperience::IsValidColor(const FString& ColorName) const
+void AVoiceCommandManager::RegisterFunction(UWitIntentFunctionComponent* Function)
+{
+	IntentFunctions.Add(Function);
+}
+
+bool AVoiceCommandManager::IsValidColor(const FString& ColorName) const
 {
 	return ColorMap.Contains(ColorName);
 }
 
-FColor ADemoVoiceExperience::GetColorByName(const FString& ColorName) const
+FColor AVoiceCommandManager::GetColorByName(const FString& ColorName) const
 {
 	if (!ColorMap.Contains(ColorName))
 		return FColor::White;

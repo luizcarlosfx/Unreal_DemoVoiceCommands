@@ -5,15 +5,15 @@
 #include "CoreMinimal.h"
 #include "WitIntentFunctionComponent.h"
 #include "Voice/Experience/VoiceExperience.h"
-#include "DemoVoiceExperience.generated.h"
+#include "VoiceCommandManager.generated.h"
 
 UCLASS(Blueprintable)
-class VOICEDEMO_API ADemoVoiceExperience : public AVoiceExperience
+class VOICEDEMO_API AVoiceCommandManager : public AVoiceExperience
 {
 	GENERATED_BODY()
 
 public:
-	ADemoVoiceExperience();
+	AVoiceCommandManager();
 	/**
 	 * The wit voice service
 	 */
@@ -33,6 +33,7 @@ public:
 	bool TryActivateVoiceInput();
 	UFUNCTION(BlueprintCallable)
 	bool TryDeactivateVoiceInput();
+	void RegisterFunction(UWitIntentFunctionComponent* Function);
 
 	UPROPERTY(EditAnywhere)
 	TMap<FString, FString> ColorMap;
@@ -42,8 +43,14 @@ public:
 
 protected:
 	UFUNCTION()
-	void OnTranscriptionFinished(const FString& Transcription);
-	UFUNCTION()
 	void OnWitResponse(const bool bIsSuccessful, const FWitResponse& Response);
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, DisplayName="Get VoiceCommands Instance")
+	static AVoiceCommandManager* GetInstance();
+
+private:
+	inline static AVoiceCommandManager* Instance = nullptr;
 };
