@@ -13,20 +13,15 @@ void UChangeLightIntensityComponent::BeginPlay()
 
 bool UChangeLightIntensityComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
+	if (!Super::Validate(Intent, Map))
+		return false;
+
 	for (TTuple<FString, FWitEntity> Tuple : Map)
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, Tuple.Key);
-	
+
 	if (!Intent.Equals(ChangeIntensityIntent))
 		return false;
 
-	if (!Map.Contains(ObjectEntity))
-		return false;
-
-	const FString& ObjectName = Map[ObjectEntity].Value;
-
-	if (!ObjectName.Equals(TargetLightName, ESearchCase::IgnoreCase))
-		return false;
-	
 	return Map.Contains(IntensityEntity);
 }
 

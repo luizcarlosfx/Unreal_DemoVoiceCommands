@@ -3,7 +3,7 @@
 
 #include "..\Public\VoiceCommandManager.h"
 
-#include "WitIntentFunctionComponent.h"
+#include "VoiceCommandComponent.h"
 #include "Voice/Platform/PlatformVoiceService.h"
 #include "Wit/Voice/WitVoiceService.h"
 
@@ -27,7 +27,7 @@ void AVoiceCommandManager::OnWitResponse(const bool bIsSuccessful, const FWitRes
 	if (Intents.Num() == 0)
 		return;
 
-	for (UWitIntentFunctionComponent* IntentFunction : IntentFunctions)
+	for (UVoiceCommandComponent* IntentFunction : IntentFunctions)
 	{
 		if (IntentFunction->TryExecute(Response))
 			break;
@@ -110,7 +110,7 @@ bool AVoiceCommandManager::TryDeactivateVoiceInput()
 	return bResult;
 }
 
-void AVoiceCommandManager::RegisterFunction(UWitIntentFunctionComponent* Function)
+void AVoiceCommandManager::RegisterCommand(UVoiceCommandComponent* Function)
 {
 	IntentFunctions.Add(Function);
 }

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WitIntentFunctionComponent.h"
+#include "VoiceCommandComponent.h"
 #include "Voice/Experience/VoiceExperience.h"
 #include "VoiceCommandManager.generated.h"
 
@@ -27,16 +27,19 @@ public:
 	class UPlatformVoiceService* PlatformVoiceService;
 
 	UPROPERTY()
-	TArray<UWitIntentFunctionComponent*> IntentFunctions;
+	TArray<UVoiceCommandComponent*> IntentFunctions;
 
 	UFUNCTION(BlueprintCallable)
 	bool TryActivateVoiceInput();
 	UFUNCTION(BlueprintCallable)
 	bool TryDeactivateVoiceInput();
-	void RegisterFunction(UWitIntentFunctionComponent* Function);
+	void RegisterCommand(UVoiceCommandComponent* Function);
 
 	UPROPERTY(EditAnywhere)
 	TMap<FString, FString> ColorMap;
+
+	UPROPERTY(EditAnywhere)
+	TMap<FString, FVector> DirectionsMap;
 
 	bool IsValidColor(const FString& ColorName) const;
 	FColor GetColorByName(const FString& ColorName) const;

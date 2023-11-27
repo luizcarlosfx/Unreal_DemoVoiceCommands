@@ -5,15 +5,17 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Wit/Request/WitResponse.h"
-#include "WitIntentFunctionComponent.generated.h"
+#include "VoiceCommandComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class VOICEDEMO_API UWitIntentFunctionComponent : public UActorComponent
+UCLASS()
+class VOICEDEMO_API UVoiceCommandComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 protected:
+	UVoiceCommandComponent();
+	
 	UPROPERTY(EditAnywhere)
 	float ConfidenceLevel = 0.5f;
 

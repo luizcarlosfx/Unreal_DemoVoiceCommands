@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WitIntentFunctionComponent.h"
+#include "ObjectVoiceCommandComponent.h"
 #include "ChangeLightIntensityComponent.generated.h"
 
 /**
  * 
  */
 UCLASS(ClassGroup=(VoiceCommands), meta=(BlueprintSpawnableComponent))
-class VOICEDEMO_API UChangeLightIntensityComponent : public UWitIntentFunctionComponent
+class VOICEDEMO_API UChangeLightIntensityComponent : public UObjectVoiceCommandComponent
 {
 	GENERATED_BODY()
 
@@ -24,13 +24,7 @@ private:
 	FString IntensityEntity = "wit$number:intensity";
 
 	UPROPERTY(EditAnywhere)
-	FString ObjectEntity = "object:object";
-
-	UPROPERTY(EditAnywhere)
 	FString ChangeIntensityIntent = "change_light_intensity";
-
-	UPROPERTY(EditAnywhere)
-	FString TargetLightName = "light";
 
 	UPROPERTY()
 	class ULightComponent* Light;

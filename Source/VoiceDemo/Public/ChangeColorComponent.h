@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WitIntentFunctionComponent.h"
+#include "ObjectVoiceCommandComponent.h"
+#include "VoiceCommandComponent.h"
 #include "Components/ActorComponent.h"
 #include "ChangeColorComponent.generated.h"
 
 UCLASS(ClassGroup=(Custom), Abstract)
-class VOICEDEMO_API UChangeColorComponent : public UWitIntentFunctionComponent
+class VOICEDEMO_API UChangeColorComponent : public UObjectVoiceCommandComponent
 {
 	GENERATED_BODY()
 
 protected:
-	UChangeColorComponent();
 	virtual void BeginPlay() override;
 	virtual FColor GetCurrentColor() const;
 	virtual bool Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map) override;
@@ -23,9 +23,6 @@ protected:
 	void ResetColor();
 	void ChangeOpacity(const FString& PercentageText);
 	virtual void Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map) override;
-
-	UPROPERTY(EditAnywhere)
-	FString TargetObjectName;
 	
 	UPROPERTY(EditAnywhere)
 	FString ChangeColorIntent = "change_object_color";
@@ -38,9 +35,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FString OpacityEntity = "wit$number:percentage";
-
-	UPROPERTY(EditAnywhere)
-	FString ObjectEntity = "object:object";
 
 	UPROPERTY(EditAnywhere)
 	FString ColorEntity = "color:color";

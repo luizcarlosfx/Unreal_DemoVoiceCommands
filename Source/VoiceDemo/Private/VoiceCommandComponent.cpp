@@ -1,23 +1,28 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "WitIntentFunctionComponent.h"
+#include "VoiceCommandComponent.h"
 
 #include "..\Public\VoiceCommandManager.h"
 
-bool UWitIntentFunctionComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
+UVoiceCommandComponent::UVoiceCommandComponent()
+{
+	PrimaryComponentTick.bCanEverTick = false;
+}
+
+bool UVoiceCommandComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
 	return true;
 }
 
-void UWitIntentFunctionComponent::BeginPlay()
+void UVoiceCommandComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Manager = AVoiceCommandManager::GetInstance();
-	Manager->RegisterFunction(this);
+	Manager->RegisterCommand(this);
 }
 
-bool UWitIntentFunctionComponent::TryExecute(const FWitResponse& Response)
+bool UVoiceCommandComponent::TryExecute(const FWitResponse& Response)
 {
 	TArray<FWitIntent> Intents = Response.Intents;
 
@@ -47,6 +52,6 @@ bool UWitIntentFunctionComponent::TryExecute(const FWitResponse& Response)
 	return false;
 }
 
-void UWitIntentFunctionComponent::Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map)
+void UVoiceCommandComponent::Execute(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
 }

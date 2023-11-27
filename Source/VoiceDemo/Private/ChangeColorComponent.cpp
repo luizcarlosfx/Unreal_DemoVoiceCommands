@@ -2,14 +2,6 @@
 
 #include "..\Public\VoiceCommandManager.h"
 
-UChangeColorComponent::UChangeColorComponent()
-{
-	PrimaryComponentTick.bCanEverTick = false;
-
-	if (const AActor* Owner = GetOwner())
-		TargetObjectName = Owner->GetActorLabel();;
-}
-
 
 // Called when the game starts
 void UChangeColorComponent::BeginPlay()
@@ -25,12 +17,7 @@ FColor UChangeColorComponent::GetCurrentColor() const
 
 bool UChangeColorComponent::Validate(const FString& Intent, const TMap<FString, FWitEntity>& Map)
 {
-	if (!Map.Contains(ObjectEntity))
-		return false;
-
-	const FString ObjName = Map[ObjectEntity].Value;
-
-	if (!ObjName.Equals(TargetObjectName, ESearchCase::IgnoreCase))
+	if (!Super::Validate(Intent, Map))
 		return false;
 
 	if (Intent == ChangeColorIntent)
