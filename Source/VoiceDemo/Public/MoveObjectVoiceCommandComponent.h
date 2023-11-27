@@ -26,4 +26,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float TargetMovementLength = 100;
+
+	void MoveOwnerToLocation(const FVector& Location) const;
 };
