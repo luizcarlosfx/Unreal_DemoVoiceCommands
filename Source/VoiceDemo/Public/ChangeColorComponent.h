@@ -37,7 +37,7 @@ protected:
 	FString ChangeOpacityIntent = "change_object_opacity";
 
 	UPROPERTY(EditAnywhere)
-	FString OpacityEntity = "wit/number:percentage";
+	FString OpacityEntity = "wit$number:percentage";
 
 	UPROPERTY(EditAnywhere)
 	FString ObjectEntity = "object:object";
